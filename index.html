@@ -49,8 +49,8 @@
             align-items: center;
         }
 
-        h1 { margin: 0; font-size: 22px; color: var(--accent-blue); text-transform: uppercase; }
-        .room-indicator { font-weight: bold; font-size: 18px; color: var(--accent-green); }
+        h1 { margin: 0; font-size: 20px; color: var(--accent-blue); text-transform: uppercase; }
+        .room-indicator { font-weight: bold; font-size: 16px; color: var(--accent-green); text-align: right;}
 
         .scenario-box {
             background: #0f172a;
@@ -85,7 +85,6 @@
 
         .option-btn span { font-weight: bold; color: var(--accent-blue); margin-right: 10px; }
 
-        /* Outcome Overlay */
         #outcomeScreen {
             display: none;
             position: absolute;
@@ -103,12 +102,7 @@
         .success-text { color: var(--accent-green); }
         .fail-text { color: var(--accent-red); }
 
-        .outcome-desc {
-            font-size: 18px;
-            line-height: 1.6;
-            max-width: 600px;
-            margin-bottom: 30px;
-        }
+        .outcome-desc { font-size: 18px; line-height: 1.6; max-width: 600px; margin-bottom: 30px; }
 
         .action-btn {
             background-color: var(--text-main);
@@ -128,16 +122,14 @@
 
     <div class="game-container">
         <div class="header">
-            <h1>SG Command Center Lockdown</h1>
-            <div class="room-indicator" id="roomIndicator">Room 1 / 3</div>
+            <h1>SG Command Center</h1>
+            <div class="room-indicator" id="roomIndicator">Room 1/3<br>Step 1/5</div>
         </div>
 
         <div id="gamePlayArea">
             <h2 id="scenarioTitle" style="margin-top: 0;">Loading...</h2>
             <div class="scenario-box" id="scenarioDesc"></div>
-            
-            <div class="options-container" id="optionsContainer">
-                </div>
+            <div class="options-container" id="optionsContainer"></div>
         </div>
 
         <div id="outcomeScreen">
@@ -148,86 +140,160 @@
     </div>
 
     <script>
-        const scenarios = [
+        const rooms = [
             {
                 title: "Room 1: The Imminent Threat (Terrorism)",
-                desc: "Intelligence suggests an extremist sleeper cell is planning a coordinated explosive attack on a major MRT interchange in exactly 2 hours. The command center doors have locked to prevent leaks. You must direct the immediate response to defuse the situation.",
-                options: [
+                steps: [
                     {
-                        text: "Evacuate the entire downtown core immediately using blaring sirens and island-wide emergency broadcasts.",
-                        isCorrect: false,
-                        explanation: "Mass panic ensued. The massive evacuation caused severe injuries and choked the roads. Realizing they were exposed, the terrorists detonated their devices early in the crowded bottlenecks. Singapore's psychological and civil defence failed due to overreaction and loss of control."
+                        desc: "STEP 1: Intelligence suggests an extremist sleeper cell is planning a coordinated explosive attack on a major MRT interchange in exactly 2 hours. You must direct the immediate response to defuse the situation.",
+                        options: [
+                            { text: "Evacuate the entire downtown core immediately using blaring sirens.", isCorrect: false, explanation: "Mass panic ensued. Realizing they were exposed, the terrorists detonated their devices early in the crowded bottlenecks." },
+                            { text: "Wait for the terrorists to arrive at the MRT station to gather concrete legal evidence on CCTV.", isCorrect: false, explanation: "The delay was fatal. By the time visual confirmation was established, the devices were deployed." },
+                            { text: "Discreetly activate the Special Operations Command (SOC) while using SGSecure to issue calm vigilance alerts.", isCorrect: true, explanation: "A swift, targeted response. The SOC apprehended the suspects without triggering a mass panic." }
+                        ]
                     },
                     {
-                        text: "Wait for the terrorists to arrive at the MRT station so police can catch them on CCTV to gather concrete legal evidence before arresting them.",
-                        isCorrect: false,
-                        explanation: "The delay was fatal. By the time visual confirmation was established, the terrorists had already deployed their devices. Deterrence relies on proactive, preventative action, not just reactive policing. You failed to protect the citizens."
+                        desc: "STEP 2: The suspects are detained, but one mentions a secondary device hidden in a nearby warehouse. How do you locate it quickly?",
+                        options: [
+                            { text: "Carpet bomb the industrial sector to ensure the device is destroyed.", isCorrect: false, explanation: "This caused massive civilian casualties and destroyed our own infrastructure. Military Defence must be precise." },
+                            { text: "Deploy the SAF Chemical, Biological, Radiological and Explosive (CBRE) Defence Group to sweep the identified warehouse.", isCorrect: true, explanation: "Correct. The CBRE experts safely located and neutralized the threat without collateral damage." },
+                            { text: "Ask the public to go into the warehouses to look for suspicious items to save time.", isCorrect: false, explanation: "You put untrained civilians in direct, lethal danger. Civil Defence relies on trained professionals leading the response." }
+                        ]
                     },
                     {
-                        text: "Discreetly activate the Special Operations Command (SOC) to secure the perimeter while using SGSecure to issue localized, calm vigilance alerts to station staff and commuters.",
-                        isCorrect: true,
-                        explanation: "A swift, targeted, and calm response. The SOC apprehended the suspects without triggering a mass panic, while alert citizens helped identify an unattended bag. You successfully demonstrated the balance of Military, Civil, and Social defence."
+                        desc: "STEP 3: The physical threat is neutralized, but rumors are spreading online that a third attack is happening right now at a mall. Panic is rising.",
+                        options: [
+                            { text: "Issue an official statement via trusted government channels and media outlets debunking the fake news.", isCorrect: true, explanation: "Psychological Defence in action. Providing clear, factual information calms the public and prevents panic." },
+                            { text: "Shut down the entire internet in Singapore to stop the rumors from spreading.", isCorrect: false, explanation: "This crippled the economy and caused even more panic as citizens couldn't contact their loved ones." },
+                            { text: "Ignore the rumors. The truth will eventually come out on its own.", isCorrect: false, explanation: "In a vacuum of information, fear takes over. You failed to protect the psychological resilience of the nation." }
+                        ]
+                    },
+                    {
+                        desc: "STEP 4: Intelligence reveals the mastermind is trying to flee the country. What is your border strategy?",
+                        options: [
+                            { text: "Close all borders permanently. No one enters or leaves Singapore ever again.", isCorrect: false, explanation: "An extreme overreaction that instantly collapsed our trade-dependent economy." },
+                            { text: "Let them leave. It's better they are out of our country.", isCorrect: false, explanation: "You allowed a terrorist to escape justice, leaving them free to plan another attack from abroad." },
+                            { text: "Enhance Immigration & Checkpoints Authority (ICA) biometric screening and share the suspect's profile with Interpol.", isCorrect: true, explanation: "Strong Border Security combined with international cooperation ensured the mastermind was apprehended at the checkpoint." }
+                        ]
+                    },
+                    {
+                        desc: "STEP 5: The crisis is over. However, the terrorists belonged to a specific ethnic group, and racial tensions are rising in the community.",
+                        options: [
+                            { text: "Segregate communities based on race to prevent them from fighting.", isCorrect: false, explanation: "This destroyed decades of racial harmony and created deeply divided, resentful communities." },
+                            { text: "Mobilize grassroots leaders and Inter-Racial and Religious Confidence Circles (IRCCs) to facilitate community dialogues.", isCorrect: true, explanation: "Excellent Social Defence. By bringing people together to talk, you reinforced trust and unity, preventing the terrorists from dividing the nation." },
+                            { text: "Ban all public gatherings indefinitely so people cannot argue.", isCorrect: false, explanation: "You suppressed the symptoms but let the underlying mistrust grow, weakening society's resilience." }
+                        ]
                     }
                 ]
             },
             {
                 title: "Room 2: The Invisible Infiltration (Cyber Espionage)",
-                desc: "You successfully bypassed the first lockdown door. Suddenly, alarms blare. A highly sophisticated foreign entity has breached a critical government database containing defense blueprints and citizen data. The data extraction is ongoing.",
-                options: [
+                steps: [
                     {
-                        text: "Publicly accuse a specific major superpower immediately on global news, demanding they stop the attack or face war.",
-                        isCorrect: false,
-                        explanation: "Diplomatic disaster. Without concrete digital forensics, your accusation sparked a severe international crisis and economic sanctions against Singapore. True deterrence requires measured diplomacy and undeniable proof, not reckless escalation."
+                        desc: "STEP 1: A highly sophisticated foreign entity has breached a critical government database containing defense blueprints. The data extraction is ongoing.",
+                        options: [
+                            { text: "Publicly accuse a specific superpower immediately, demanding they stop.", isCorrect: false, explanation: "Without undeniable proof, your reckless accusation sparked an international crisis." },
+                            { text: "Isolate the compromised servers, deploy the Cyber Security Agency (CSA) to patch the vulnerability.", isCorrect: true, explanation: "Textbook Digital Defence. By isolating the threat, you protected the remaining data." },
+                            { text: "Sever the undersea internet cables, disconnecting the entire country from the web.", isCorrect: false, explanation: "The cure was worse than the disease, completely collapsing our Economic Defence." }
+                        ]
                     },
                     {
-                        text: "Isolate the compromised servers, deploy the Cyber Security Agency (CSA) to patch the vulnerability, and quietly share the threat intelligence with international allies.",
-                        isCorrect: true,
-                        explanation: "Textbook digital deterrence. By isolating the threat, you protected the remaining data. Sharing the intelligence with allies builds a collective cyber defense network, deterring the attacker from trying again as their methods are now known globally."
+                        desc: "STEP 2: The CSA discovers the malware is polymorphic (it changes its code constantly). Standard antiviruses are failing.",
+                        options: [
+                            { text: "Reboot all government computers. Maybe it will clear the memory.", isCorrect: false, explanation: "Rebooting did nothing to remove the deeply embedded malware, and you lost valuable diagnostic data." },
+                            { text: "Pay a shady hacker group online to counter-hack the malware.", isCorrect: false, explanation: "You funded criminals and gave them access to national systems. The situation worsened." },
+                            { text: "Utilize AI-driven threat hunting tools to identify the malware's behavior patterns and block its Command & Control server.", isCorrect: true, explanation: "By adapting with advanced technology, you successfully neutralized the active threat." }
+                        ]
                     },
                     {
-                        text: "Physically sever the undersea internet cables, disconnecting the entire country from the global internet to ensure the data cannot leave.",
-                        isCorrect: false,
-                        explanation: "Economic suicide. While you stopped the leak, cutting off the internet crippled Singapore's financial sector, international trade, and communications. The cure was worse than the disease, completely collapsing our Economic Defence."
+                        desc: "STEP 3: The attackers, frustrated, shift their target to Singapore's financial institutions to cause economic chaos.",
+                        options: [
+                            { text: "Order all banks to freeze all accounts so no money can move.", isCorrect: false, explanation: "This caused immediate domestic panic and destroyed international confidence in Singapore's financial hub." },
+                            { text: "Mandate elevated cybersecurity protocols via the Monetary Authority of Singapore (MAS) and activate offline data backups.", isCorrect: true, explanation: "Economic Defence maintained. The banks stayed operational while shielding their core ledgers from corruption." },
+                            { text: "Tell the private banks it is their own problem to solve.", isCorrect: false, explanation: "National security requires public-private partnership. The banks were overwhelmed and the economy crashed." }
+                        ]
+                    },
+                    {
+                        desc: "STEP 4: Digital forensics definitively trace the attack back to a specific state actor. They deny involvement.",
+                        options: [
+                            { text: "Launch a destructive military missile strike on their cyber-command headquarters.", isCorrect: false, explanation: "You escalated a cyber incident into a kinetic war. Deterrence failed." },
+                            { text: "Work with ASEAN and international allies to issue a joint diplomatic statement condemning the cyber-norm violation.", isCorrect: true, explanation: "Strategic diplomacy. By rallying the international community, you applied pressure without firing a single shot." },
+                            { text: "Ignore it. They didn't get the most important files anyway.", isCorrect: false, explanation: "Appeasement invites further attacks. You signaled that Singapore is a soft target." }
+                        ]
+                    },
+                    {
+                        desc: "STEP 5: The threat is repelled. How do you ensure this doesn't happen again?",
+                        options: [
+                            { text: "Ban all foreign software and only use locally made computers.", isCorrect: false, explanation: "This isolated Singapore from global technological advancements, severely stunting our growth." },
+                            { text: "Launch a nationwide cyber hygiene campaign for citizens and businesses to prevent phishing, the main entry point for hackers.", isCorrect: true, explanation: "Total Defence relies on everyone. Educating the public hardens the nation against future digital intrusions." },
+                            { text: "Make internet access read-only for the general public.", isCorrect: false, explanation: "An authoritarian move that destroyed the digital economy and civil liberties." }
+                        ]
                     }
                 ]
             },
             {
                 title: "Room 3: The Territorial Intimidation (Aggressive State Actor)",
-                desc: "You are at the final door. Radar shows a much larger neighboring state has begun conducting aggressive, unannounced naval drills right on the edge of Singapore's territorial waters, aggressively disrupting vital international trade routes.",
-                options: [
+                steps: [
                     {
-                        text: "Ignore the drills entirely and order commercial ships to find longer, alternative routes to avoid provoking the foreign navy.",
-                        isCorrect: false,
-                        explanation: "Appeasement failed. By yielding our sovereign rights to free navigation, you showed weakness. This invited further bullying and permanently damaged investor confidence in Singapore as a secure global hub. We lost our sovereignty without firing a shot."
+                        desc: "STEP 1: Radar shows a larger neighboring state conducting aggressive, unannounced naval drills right on the edge of Singapore's territorial waters.",
+                        options: [
+                            { text: "Ignore the drills and tell commercial ships to find alternative routes.", isCorrect: false, explanation: "Appeasement failed. Yielding sovereign rights invited further bullying." },
+                            { text: "Deploy the Republic of Singapore Navy (RSN) to patrol borders without engaging, and open diplomatic channels.", isCorrect: true, explanation: "Perfect deterrence. The RSN showed readiness while diplomacy kept tensions from boiling over." },
+                            { text: "Fire warning shots across the bows of the foreign vessels.", isCorrect: false, explanation: "Catastrophic escalation. Your warning shots started an unnecessary war." }
+                        ]
                     },
                     {
-                        text: "Maintain high vigilance, deploy the Republic of Singapore Navy (RSN) to patrol our borders without engaging, and immediately open diplomatic channels citing international maritime law.",
-                        isCorrect: true,
-                        explanation: "Perfect execution of deterrence and diplomacy. The RSN's presence showed we are ready and capable of defending our sovereignty, while leveraging international law (like UNCLOS) rallied global support. You held the line without sparking a war."
+                        desc: "STEP 2: In retaliation for our patrols, the foreign state threatens to block vital food and sand exports to Singapore.",
+                        options: [
+                            { text: "Surrender to their demands to keep the food flowing.", isCorrect: false, explanation: "You compromised national sovereignty. They now know they can control Singapore through blackmail." },
+                            { text: "Threaten to bomb their commercial ports if they stop the exports.", isCorrect: false, explanation: "Aggressive military threats isolated Singapore globally and validated the foreign state's aggression." },
+                            { text: "Tap into national stockpiles immediately and activate diversified supply chains from other countries.", isCorrect: true, explanation: "Economic Defence saved the day. By showing we don't rely solely on them, their blackmail tactic became useless." }
+                        ]
                     },
                     {
-                        text: "Fire warning shots across the bows of the foreign vessels to show strength and prove that Singapore will not be intimidated.",
-                        isCorrect: false,
-                        explanation: "Catastrophic escalation. Your warning shots were interpreted as an act of war by the larger state. Singapore was forced into an asymmetric kinetic conflict that devastated our infrastructure. Deterrence is meant to prevent war, not start it."
+                        desc: "STEP 3: The foreign state begins broadcasting propaganda into Singapore, claiming our land historically belongs to them.",
+                        options: [
+                            { text: "Reinforce National Education messaging, reminding citizens of our sovereign history and the importance of unity.", isCorrect: true, explanation: "Strong Psychological Defence. An educated, united populace will not be swayed by foreign interference." },
+                            { text: "Broadcast our own fake news into their country to confuse their citizens.", isCorrect: false, explanation: "Engaging in a disinformation war eroded our international standing and moral high ground." },
+                            { text: "Arrest anyone caught listening to the broadcasts.", isCorrect: false, explanation: "Heavy-handed policing caused domestic resentment and played right into the enemy's narrative of a fractured society." }
+                        ]
+                    },
+                    {
+                        desc: "STEP 4: Tensions escalate. The foreign state begins massing troops near the border.",
+                        options: [
+                            { text: "Disband the SAF to prove we have no hostile intentions.", isCorrect: false, explanation: "You completely removed our Military Defence. They invaded the next day." },
+                            { text: "Sign a unilateral defense treaty, becoming a puppet state to a rival superpower.", isCorrect: false, explanation: "You traded one threat for another, losing Singapore's independent foreign policy and sovereignty." },
+                            { text: "Conduct planned, joint military exercises with friendly international nations to signal our robust defense ties.", isCorrect: true, explanation: "Deterrence through alliances. Showing strong partnerships makes the aggressor recalculate the cost of an invasion." }
+                        ]
+                    },
+                    {
+                        desc: "STEP 5: The crisis peaks at an emergency ASEAN summit. Their leader aggressively demands concessions in front of the world.",
+                        options: [
+                            { text: "Walk out of the summit in protest.", isCorrect: false, explanation: "You abandoned the diplomatic battlefield, allowing them to control the narrative." },
+                            { text: "Stand firm, reiterate Singapore's commitment to international law (UNCLOS), and propose mutual economic cooperation instead.", isCorrect: true, explanation: "Masterful diplomacy. You held the line on sovereignty while offering a peaceful, prosperous off-ramp for both nations." },
+                            { text: "Challenge their leader to a physical fight to show strength.", isCorrect: false, explanation: "You embarrassed the nation on the global stage and destroyed our diplomatic credibility." }
+                        ]
                     }
                 ]
             }
         ];
 
-        let currentRoom = 0;
-        let isCurrentGameOver = false;
+        let currentRoomIndex = 0;
+        let currentStepIndex = 0;
+        let state = "PLAYING"; // PLAYING, STEP_FAIL, ROOM_WIN, GAME_WIN
 
-        function loadRoom() {
-            const scenario = scenarios[currentRoom];
-            document.getElementById('roomIndicator').innerText = `Room ${currentRoom + 1} / 3`;
-            document.getElementById('scenarioTitle').innerText = scenario.title;
-            document.getElementById('scenarioDesc').innerText = scenario.desc;
+        function loadStep() {
+            const room = rooms[currentRoomIndex];
+            const step = room.steps[currentStepIndex];
+            
+            document.getElementById('roomIndicator').innerHTML = `Room ${currentRoomIndex + 1}/3<br>Step ${currentStepIndex + 1}/5`;
+            document.getElementById('scenarioTitle').innerText = room.title;
+            document.getElementById('scenarioDesc').innerText = step.desc;
 
             const optionsContainer = document.getElementById('optionsContainer');
             optionsContainer.innerHTML = '';
 
-            // Randomize options so the answer isn't always in the same spot
-            let shuffledOptions = [...scenario.options].sort(() => Math.random() - 0.5);
+            let shuffledOptions = [...step.options].sort(() => Math.random() - 0.5);
 
             shuffledOptions.forEach((opt, index) => {
                 const btn = document.createElement('button');
@@ -248,20 +314,30 @@
             outcomeDesc.innerText = option.explanation;
 
             if (option.isCorrect) {
-                outcomeTitle.innerText = "ACCESS GRANTED";
                 outcomeTitle.className = "outcome-title success-text";
-                isCurrentGameOver = false;
                 
-                if (currentRoom === scenarios.length - 1) {
-                    nextBtn.innerText = "Finish Game";
+                // Check if this was the last step in the room
+                if (currentStepIndex === rooms[currentRoomIndex].steps.length - 1) {
+                    outcomeTitle.innerText = "ROOM UNLOCKED";
+                    state = "ROOM_WIN";
+                    
+                    // Check if this was the final room in the game
+                    if (currentRoomIndex === rooms.length - 1) {
+                        nextBtn.innerText = "Complete Simulation";
+                        state = "GAME_WIN";
+                    } else {
+                        nextBtn.innerText = "Enter Next Room";
+                    }
                 } else {
-                    nextBtn.innerText = "Proceed to Next Room";
+                    outcomeTitle.innerText = "CORRECT ACTION";
+                    state = "PLAYING";
+                    nextBtn.innerText = "Next Step";
                 }
             } else {
-                outcomeTitle.innerText = "LOCKDOWN ENFORCED: FAILED";
+                outcomeTitle.innerText = "PROTOCOL FAILED";
                 outcomeTitle.className = "outcome-title fail-text";
-                isCurrentGameOver = true;
-                nextBtn.innerText = "Restart Protocol (Try Again)";
+                state = "STEP_FAIL";
+                nextBtn.innerText = "Restart Room Protocol";
             }
         }
 
@@ -269,34 +345,37 @@
             const outcomeScreen = document.getElementById('outcomeScreen');
             outcomeScreen.style.display = 'none';
 
-            if (isCurrentGameOver) {
-                // They failed, reset to room 1
-                currentRoom = 0;
-                loadRoom();
-            } else {
-                // They succeeded
-                if (currentRoom < scenarios.length - 1) {
-                    currentRoom++;
-                    loadRoom();
-                } else {
-                    // Won the game
-                    document.getElementById('gamePlayArea').innerHTML = `
-                        <h2 style="color: #10b981; text-align:center; font-size: 30px;">COMMAND CENTER UNLOCKED</h2>
-                        <div class="scenario-box" style="text-align:center; font-size: 18px;">
-                            Congratulations, Director. Your deep understanding of Singapore's strategic vulnerabilities and the principles of Total Defence has successfully navigated us through these crises.<br><br>
-                            You applied measured diplomacy, robust security protocols, and psychological resilience to maintain peace and sovereignty.<br><br>
-                            You have escaped the room.
-                        </div>
-                        <div style="text-align:center;">
-                            <button class="action-btn" onclick="location.reload()">Play Again</button>
-                        </div>
-                    `;
-                }
+            if (state === "STEP_FAIL") {
+                // Reset to step 1 of the CURRENT room
+                currentStepIndex = 0;
+                loadStep();
+            } else if (state === "PLAYING") {
+                // Move to next step
+                currentStepIndex++;
+                loadStep();
+            } else if (state === "ROOM_WIN") {
+                // Move to step 1 of the NEXT room
+                currentRoomIndex++;
+                currentStepIndex = 0;
+                loadStep();
+            } else if (state === "GAME_WIN") {
+                // Victory Screen
+                document.getElementById('gamePlayArea').innerHTML = `
+                    <h2 style="color: #10b981; text-align:center; font-size: 30px;">COMMAND CENTER UNLOCKED</h2>
+                    <div class="scenario-box" style="text-align:center; font-size: 18px;">
+                        Congratulations, Director. You have successfully navigated all 15 crisis points.<br><br>
+                        By balancing Military strength, Civil preparedness, Economic resilience, Social harmony, Psychological fortitude, and Digital security, you have proven that Total Defence is the ultimate deterrent.<br><br>
+                        Singapore remains secure.
+                    </div>
+                    <div style="text-align:center;">
+                        <button class="action-btn" onclick="location.reload()">Play Again</button>
+                    </div>
+                `;
             }
         }
 
         // Initialize the game
-        loadRoom();
+        loadStep();
     </script>
 </body>
 </html>
