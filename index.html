@@ -13,6 +13,8 @@
             --accent-green: #10b981;
             --accent-red: #ef4444;
             --border-color: #334155;
+            --terminal-bg: #000000;
+            --terminal-text: #22c55e;
         }
 
         * { box-sizing: border-box; font-family: 'Courier New', Courier, monospace; }
@@ -57,12 +59,62 @@
             padding: 20px;
             border-left: 4px solid var(--accent-blue);
             border-radius: 4px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             line-height: 1.6;
             font-size: 16px;
         }
 
-        .options-container { display: flex; flex-direction: column; gap: 15px; }
+        /* Mini-Game Terminal Styles */
+        .minigame-container {
+            background-color: var(--terminal-bg);
+            border: 1px solid var(--terminal-text);
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            color: var(--terminal-text);
+            text-align: center;
+        }
+        
+        .scrambled-word { font-size: 24px; letter-spacing: 5px; margin: 15px 0; font-weight: bold; }
+        
+        .decrypt-input {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid var(--terminal-text);
+            color: var(--terminal-text);
+            font-size: 18px;
+            text-align: center;
+            outline: none;
+            text-transform: uppercase;
+            width: 200px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .decrypt-btn {
+            background-color: var(--terminal-text);
+            color: var(--terminal-bg);
+            border: none;
+            padding: 8px 15px;
+            margin-left: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .decrypt-btn:hover { background-color: #16a34a; }
+
+        .error-msg { color: var(--accent-red); font-size: 14px; margin-top: 10px; display: none; }
+        
+        .intel-hint {
+            display: none;
+            background-color: rgba(34, 197, 94, 0.1);
+            border-left: 4px solid var(--accent-green);
+            padding: 15px;
+            margin-bottom: 20px;
+            color: var(--text-main);
+        }
+        .intel-hint span { color: var(--accent-green); font-weight: bold; }
+
+        .options-container { display: none; flex-direction: column; gap: 15px; }
 
         .option-btn {
             background-color: transparent;
@@ -82,7 +134,6 @@
             background-color: rgba(59, 130, 246, 0.1);
             transform: translateX(5px);
         }
-
         .option-btn span { font-weight: bold; color: var(--accent-blue); margin-right: 10px; }
 
         #outcomeScreen {
@@ -101,20 +152,8 @@
         .outcome-title { font-size: 32px; margin-bottom: 15px; text-transform: uppercase; }
         .success-text { color: var(--accent-green); }
         .fail-text { color: var(--accent-red); }
-
         .outcome-desc { font-size: 18px; line-height: 1.6; max-width: 600px; margin-bottom: 30px; }
-
-        .action-btn {
-            background-color: var(--text-main);
-            color: var(--bg-color);
-            border: none;
-            padding: 12px 25px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: 0.2s;
-        }
+        .action-btn { background-color: var(--text-main); color: var(--bg-color); border: none; padding: 12px 25px; font-size: 18px; font-weight: bold; cursor: pointer; border-radius: 4px; transition: 0.2s; }
         .action-btn:hover { background-color: #cbd5e1; }
     </style>
 </head>
@@ -129,6 +168,20 @@
         <div id="gamePlayArea">
             <h2 id="scenarioTitle" style="margin-top: 0;">Loading...</h2>
             <div class="scenario-box" id="scenarioDesc"></div>
+            
+            <div class="minigame-container" id="minigameArea">
+                <div>⚠️ ENCRYPTED INTEL INTERCEPTED ⚠️</div>
+                <div style="font-size: 14px; color: #aaa; margin-top: 5px;">Unscramble the keyword to unlock the command options and reveal a hint.</div>
+                <div class="scrambled-word" id="scrambledWord">L O A D I N G</div>
+                <input type="text" class="decrypt-input" id="decryptInput" placeholder="ENTER KEYWORD" autocomplete="off">
+                <button class="decrypt-btn" onclick="checkDecryption()">DECRYPT</button>
+                <div class="error-msg" id="decryptError">Access Denied. Incorrect Keyword.</div>
+            </div>
+
+            <div class="intel-hint" id="intelHintArea">
+                <span>INTEL DECODED:</span> <span id="intelHintText" style="color: white; font-weight: normal;">Hint goes here</span>
+            </div>
+
             <div class="options-container" id="optionsContainer"></div>
         </div>
 
@@ -146,6 +199,8 @@
                 steps: [
                     {
                         desc: "STEP 1: Intelligence suggests an extremist sleeper cell is planning a coordinated explosive attack on a major MRT interchange in exactly 2 hours. You must direct the immediate response to defuse the situation.",
+                        keyword: "SGSECURE",
+                        hint: "Look for the option that uses the mobile app designed for citizens to report emergencies quietly.",
                         options: [
                             { text: "Evacuate the entire downtown core immediately using blaring sirens.", isCorrect: false, explanation: "Mass panic ensued. Realizing they were exposed, the terrorists detonated their devices early in the crowded bottlenecks." },
                             { text: "Wait for the terrorists to arrive at the MRT station to gather concrete legal evidence on CCTV.", isCorrect: false, explanation: "The delay was fatal. By the time visual confirmation was established, the devices were deployed." },
@@ -154,6 +209,8 @@
                     },
                     {
                         desc: "STEP 2: The suspects are detained, but one mentions a secondary device hidden in a nearby warehouse. How do you locate it quickly?",
+                        keyword: "CBRE",
+                        hint: "You need the SAF group specializing in Chemical, Biological, Radiological, and Explosive threats.",
                         options: [
                             { text: "Carpet bomb the industrial sector to ensure the device is destroyed.", isCorrect: false, explanation: "This caused massive civilian casualties and destroyed our own infrastructure. Military Defence must be precise." },
                             { text: "Deploy the SAF Chemical, Biological, Radiological and Explosive (CBRE) Defence Group to sweep the identified warehouse.", isCorrect: true, explanation: "Correct. The CBRE experts safely located and neutralized the threat without collateral damage." },
@@ -162,6 +219,8 @@
                     },
                     {
                         desc: "STEP 3: The physical threat is neutralized, but rumors are spreading online that a third attack is happening right now at a mall. Panic is rising.",
+                        keyword: "FACTS",
+                        hint: "Counter fake news by providing these instead of shutting down communications.",
                         options: [
                             { text: "Issue an official statement via trusted government channels and media outlets debunking the fake news.", isCorrect: true, explanation: "Psychological Defence in action. Providing clear, factual information calms the public and prevents panic." },
                             { text: "Shut down the entire internet in Singapore to stop the rumors from spreading.", isCorrect: false, explanation: "This crippled the economy and caused even more panic as citizens couldn't contact their loved ones." },
@@ -170,6 +229,8 @@
                     },
                     {
                         desc: "STEP 4: Intelligence reveals the mastermind is trying to flee the country. What is your border strategy?",
+                        keyword: "ICA",
+                        hint: "Rely on the authority responsible for securing our borders and checkpoints.",
                         options: [
                             { text: "Close all borders permanently. No one enters or leaves Singapore ever again.", isCorrect: false, explanation: "An extreme overreaction that instantly collapsed our trade-dependent economy." },
                             { text: "Let them leave. It's better they are out of our country.", isCorrect: false, explanation: "You allowed a terrorist to escape justice, leaving them free to plan another attack from abroad." },
@@ -178,6 +239,8 @@
                     },
                     {
                         desc: "STEP 5: The crisis is over. However, the terrorists belonged to a specific ethnic group, and racial tensions are rising in the community.",
+                        keyword: "IRCC",
+                        hint: "Empower the Inter-Racial and Religious Confidence Circles to restore harmony.",
                         options: [
                             { text: "Segregate communities based on race to prevent them from fighting.", isCorrect: false, explanation: "This destroyed decades of racial harmony and created deeply divided, resentful communities." },
                             { text: "Mobilize grassroots leaders and Inter-Racial and Religious Confidence Circles (IRCCs) to facilitate community dialogues.", isCorrect: true, explanation: "Excellent Social Defence. By bringing people together to talk, you reinforced trust and unity, preventing the terrorists from dividing the nation." },
@@ -191,6 +254,8 @@
                 steps: [
                     {
                         desc: "STEP 1: A highly sophisticated foreign entity has breached a critical government database containing defense blueprints. The data extraction is ongoing.",
+                        keyword: "ISOLATE",
+                        hint: "You must cut off the infected servers from the rest of the network to stop the bleeding.",
                         options: [
                             { text: "Publicly accuse a specific superpower immediately, demanding they stop.", isCorrect: false, explanation: "Without undeniable proof, your reckless accusation sparked an international crisis." },
                             { text: "Isolate the compromised servers, deploy the Cyber Security Agency (CSA) to patch the vulnerability.", isCorrect: true, explanation: "Textbook Digital Defence. By isolating the threat, you protected the remaining data." },
@@ -198,7 +263,9 @@
                         ]
                     },
                     {
-                        desc: "STEP 2: The Cyber Security Agency (CSA) discovers the malware is polymorphic (it changes its code constantly). Standard antiviruses are failing.",
+                        desc: "STEP 2: The CSA discovers the malware is polymorphic (it changes its code constantly). Standard antiviruses are failing.",
+                        keyword: "AI",
+                        hint: "Use advanced Artificial Intelligence tools to hunt down the adapting malware.",
                         options: [
                             { text: "Reboot all government computers. Maybe it will clear the memory.", isCorrect: false, explanation: "Rebooting did nothing to remove the deeply embedded malware, and you lost valuable diagnostic data." },
                             { text: "Pay a shady hacker group online to counter-hack the malware.", isCorrect: false, explanation: "You funded criminals and gave them access to national systems. The situation worsened." },
@@ -207,6 +274,8 @@
                     },
                     {
                         desc: "STEP 3: The attackers, frustrated, shift their target to Singapore's financial institutions to cause economic chaos.",
+                        keyword: "BACKUPS",
+                        hint: "Financial institutions must rely on these offline data copies to restore operations.",
                         options: [
                             { text: "Order all banks to freeze all accounts so no money can move.", isCorrect: false, explanation: "This caused immediate domestic panic and destroyed international confidence in Singapore's financial hub." },
                             { text: "Mandate elevated cybersecurity protocols via the Monetary Authority of Singapore (MAS) and activate offline data backups.", isCorrect: true, explanation: "Economic Defence maintained. The banks stayed operational while shielding their core ledgers from corruption." },
@@ -215,6 +284,8 @@
                     },
                     {
                         desc: "STEP 4: Digital forensics definitively trace the attack back to a specific state actor. They deny involvement.",
+                        keyword: "DIPLOMACY",
+                        hint: "Use international relations, alliances, and joint statements, not kinetic missiles.",
                         options: [
                             { text: "Launch a destructive military missile strike on their cyber-command headquarters.", isCorrect: false, explanation: "You escalated a cyber incident into a kinetic war. Deterrence failed." },
                             { text: "Work with ASEAN and international allies to issue a joint diplomatic statement condemning the cyber-norm violation.", isCorrect: true, explanation: "Strategic diplomacy. By rallying the international community, you applied pressure without firing a single shot." },
@@ -223,9 +294,11 @@
                     },
                     {
                         desc: "STEP 5: The threat is repelled. How do you ensure this doesn't happen again?",
+                        keyword: "HYGIENE",
+                        hint: "Cyber ________ is the practice of training citizens and workers to avoid clicking bad links.",
                         options: [
                             { text: "Ban all foreign software and only use locally made computers.", isCorrect: false, explanation: "This isolated Singapore from global technological advancements, severely stunting our growth." },
-                            { text: "Launch a nationwide cyber hygiene campaign for citizens and businesses to prevent phishing, the main entry point for hackers.", isCorrect: true, explanation: "Total Defence relies on everyone. Educating the public hardens the nation against future digital intrusions." },
+                            { text: "Launch a nationwide cyber hygiene campaign for citizens and businesses to prevent phishing.", isCorrect: true, explanation: "Total Defence relies on everyone. Educating the public hardens the nation against future digital intrusions." },
                             { text: "Make internet access read-only for the general public.", isCorrect: false, explanation: "An authoritarian move that destroyed the digital economy and civil liberties." }
                         ]
                     }
@@ -236,6 +309,8 @@
                 steps: [
                     {
                         desc: "STEP 1: Radar shows a larger neighboring state conducting aggressive, unannounced naval drills right on the edge of Singapore's territorial waters.",
+                        keyword: "NAVY",
+                        hint: "The Republic of Singapore ____ patrols our waters to deter threats.",
                         options: [
                             { text: "Ignore the drills and tell commercial ships to find alternative routes.", isCorrect: false, explanation: "Appeasement failed. Yielding sovereign rights invited further bullying." },
                             { text: "Deploy the Republic of Singapore Navy (RSN) to patrol borders without engaging, and open diplomatic channels.", isCorrect: true, explanation: "Perfect deterrence. The RSN showed readiness while diplomacy kept tensions from boiling over." },
@@ -244,6 +319,8 @@
                     },
                     {
                         desc: "STEP 2: In retaliation for our patrols, the foreign state threatens to block vital food and sand exports to Singapore.",
+                        keyword: "STOCKPILES",
+                        hint: "Tap into our national reserves of essential goods kept for emergencies.",
                         options: [
                             { text: "Surrender to their demands to keep the food flowing.", isCorrect: false, explanation: "You compromised national sovereignty. They now know they can control Singapore through blackmail." },
                             { text: "Threaten to bomb their commercial ports if they stop the exports.", isCorrect: false, explanation: "Aggressive military threats isolated Singapore globally and validated the foreign state's aggression." },
@@ -252,6 +329,8 @@
                     },
                     {
                         desc: "STEP 3: The foreign state begins broadcasting propaganda into Singapore, claiming our land historically belongs to them.",
+                        keyword: "UNITY",
+                        hint: "A strong sense of national _____ is the best psychological defense against foreign lies.",
                         options: [
                             { text: "Reinforce National Education messaging, reminding citizens of our sovereign history and the importance of unity.", isCorrect: true, explanation: "Strong Psychological Defence. An educated, united populace will not be swayed by foreign interference." },
                             { text: "Broadcast our own fake news into their country to confuse their citizens.", isCorrect: false, explanation: "Engaging in a disinformation war eroded our international standing and moral high ground." },
@@ -260,6 +339,8 @@
                     },
                     {
                         desc: "STEP 4: Tensions escalate. The foreign state begins massing troops near the border.",
+                        keyword: "ALLIANCES",
+                        hint: "Conducting joint exercises with friendly nations builds strong defense _________.",
                         options: [
                             { text: "Disband the SAF to prove we have no hostile intentions.", isCorrect: false, explanation: "You completely removed our Military Defence. They invaded the next day." },
                             { text: "Sign a unilateral defense treaty, becoming a puppet state to a rival superpower.", isCorrect: false, explanation: "You traded one threat for another, losing Singapore's independent foreign policy and sovereignty." },
@@ -268,6 +349,8 @@
                     },
                     {
                         desc: "STEP 5: The crisis peaks at an emergency ASEAN summit. Their leader aggressively demands concessions in front of the world.",
+                        keyword: "UNCLOS",
+                        hint: "Rely on the United Nations Convention on the Law of the Sea to defend our rights.",
                         options: [
                             { text: "Walk out of the summit in protest.", isCorrect: false, explanation: "You abandoned the diplomatic battlefield, allowing them to control the narrative." },
                             { text: "Stand firm, reiterate Singapore's commitment to international law (UNCLOS), and propose mutual economic cooperation instead.", isCorrect: true, explanation: "Masterful diplomacy. You held the line on sovereignty while offering a peaceful, prosperous off-ramp for both nations." },
@@ -280,7 +363,18 @@
 
         let currentRoomIndex = 0;
         let currentStepIndex = 0;
-        let state = "PLAYING"; // PLAYING, STEP_FAIL, ROOM_WIN, GAME_WIN
+        let state = "PLAYING"; 
+        let currentKeyword = "";
+
+        // Function to scramble a word
+        function scramble(word) {
+            let a = word.split(""), n = a.length;
+            for(let i = n - 1; i > 0; i--) {
+                let j = Math.floor(Math.random() * (i + 1));
+                let tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+            }
+            return a.join(" ");
+        }
 
         function loadStep() {
             const room = rooms[currentRoomIndex];
@@ -290,11 +384,22 @@
             document.getElementById('scenarioTitle').innerText = room.title;
             document.getElementById('scenarioDesc').innerText = step.desc;
 
+            // Setup Mini-Game
+            currentKeyword = step.keyword;
+            document.getElementById('scrambledWord').innerText = scramble(currentKeyword);
+            document.getElementById('decryptInput').value = "";
+            document.getElementById('decryptError').style.display = "none";
+            document.getElementById('minigameArea').style.display = "block";
+            
+            // Hide Options and Hints initially
+            document.getElementById('intelHintArea').style.display = "none";
+            document.getElementById('intelHintText').innerText = step.hint;
+            
             const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.style.display = "none"; // Hide until decrypted
             optionsContainer.innerHTML = '';
 
             let shuffledOptions = [...step.options].sort(() => Math.random() - 0.5);
-
             shuffledOptions.forEach((opt, index) => {
                 const btn = document.createElement('button');
                 btn.className = 'option-btn';
@@ -302,6 +407,27 @@
                 btn.onclick = () => selectOption(opt);
                 optionsContainer.appendChild(btn);
             });
+        }
+
+        // Allow pressing Enter to submit
+        document.getElementById("decryptInput").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                checkDecryption();
+            }
+        });
+
+        function checkDecryption() {
+            const input = document.getElementById('decryptInput').value.toUpperCase().trim();
+            if (input === currentKeyword) {
+                // Success! Hide minigame, show hint and options
+                document.getElementById('minigameArea').style.display = "none";
+                document.getElementById('intelHintArea').style.display = "block";
+                document.getElementById('optionsContainer').style.display = "flex";
+            } else {
+                document.getElementById('decryptError').style.display = "block";
+                setTimeout(() => { document.getElementById('decryptError').style.display = "none"; }, 2000);
+            }
         }
 
         function selectOption(option) {
@@ -316,12 +442,9 @@
             if (option.isCorrect) {
                 outcomeTitle.className = "outcome-title success-text";
                 
-                // Check if this was the last step in the room
                 if (currentStepIndex === rooms[currentRoomIndex].steps.length - 1) {
                     outcomeTitle.innerText = "ROOM UNLOCKED";
                     state = "ROOM_WIN";
-                    
-                    // Check if this was the final room in the game
                     if (currentRoomIndex === rooms.length - 1) {
                         nextBtn.innerText = "Complete Simulation";
                         state = "GAME_WIN";
@@ -346,20 +469,16 @@
             outcomeScreen.style.display = 'none';
 
             if (state === "STEP_FAIL") {
-                // Reset to step 1 of the CURRENT room
                 currentStepIndex = 0;
                 loadStep();
             } else if (state === "PLAYING") {
-                // Move to next step
                 currentStepIndex++;
                 loadStep();
             } else if (state === "ROOM_WIN") {
-                // Move to step 1 of the NEXT room
                 currentRoomIndex++;
                 currentStepIndex = 0;
                 loadStep();
             } else if (state === "GAME_WIN") {
-                // Victory Screen
                 document.getElementById('gamePlayArea').innerHTML = `
                     <h2 style="color: #10b981; text-align:center; font-size: 30px;">COMMAND CENTER UNLOCKED</h2>
                     <div class="scenario-box" style="text-align:center; font-size: 18px;">
@@ -374,7 +493,6 @@
             }
         }
 
-        // Initialize the game
         loadStep();
     </script>
 </body>
