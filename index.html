@@ -209,7 +209,7 @@
         <div id="gamePlayArea">
             <h2 id="scenarioTitle" style="margin-top: 0;">Loading...</h2>
             
-            <div class="minigame-container" id="minigameArea">
+            <div class="minigame-container" id="minigameArea" style="display: none;">
                 <div style="font-size: 18px; margin-bottom: 5px;">⚠️ ENCRYPTED INTEL INTERCEPTED ⚠️</div>
                 <div style="font-size: 14px; color: #aaa;">Decrypt the keyword below to reveal the crisis scenario and command options.</div>
                 
@@ -241,20 +241,20 @@
     </div>
 
     <script>
+        // Completely cleaned data structure. Only Steps 2 and 4 contain mini-game parameters.
         const rooms = [
             {
                 title: "Room 1: The Imminent Threat (Terrorism)",
                 steps: [
-                    {
+                    {   // Step 1 (No Mini-game)
                         desc: "CRISIS REVEALED: Intelligence suggests an extremist sleeper cell is planning a coordinated explosive attack on a major MRT interchange in exactly 2 hours. You must direct the immediate response to defuse the situation.",
-                        keyword: "SGSECURE", // Not used for decryption here, but kept for data structure consistency
                         options: [
                             { text: "Evacuate the entire downtown core immediately using blaring sirens.", isCorrect: false, explanation: "Mass panic ensued. Realizing they were exposed, the terrorists detonated their devices early in the crowded bottlenecks." },
                             { text: "Wait for the terrorists to arrive at the MRT station to gather concrete legal evidence on CCTV.", isCorrect: false, explanation: "The delay was fatal. By the time visual confirmation was established, the devices were deployed." },
                             { text: "Discreetly activate the Special Operations Command (SOC) while using SGSecure to issue calm vigilance alerts.", isCorrect: true, explanation: "A swift, targeted response. The SOC apprehended the suspects without triggering a mass panic." }
                         ]
                     },
-                    {
+                    {   // Step 2 (Mini-game)
                         desc: "CRISIS REVEALED: The suspects are detained, but one mentions a secondary device hidden in a nearby warehouse. How do you locate it quickly?",
                         keyword: "CBRE",
                         anagramHint: "A 4-letter acronym for Chemical, Biological, Radiological, and Explosive.",
@@ -265,16 +265,15 @@
                             { text: "Ask the public to go into the warehouses to look for suspicious items to save time.", isCorrect: false, explanation: "You put untrained civilians in direct, lethal danger. Civil Defence relies on trained professionals leading the response." }
                         ]
                     },
-                    {
+                    {   // Step 3 (No Mini-game)
                         desc: "CRISIS REVEALED: The physical threat is neutralized, but rumors are spreading online that a third attack is happening right now at a mall. Panic is rising.",
-                        keyword: "FACTS", 
                         options: [
                             { text: "Issue an official statement via trusted government channels and media outlets debunking the fake news.", isCorrect: true, explanation: "Psychological Defence in action. Providing clear, factual information calms the public and prevents panic." },
                             { text: "Shut down the entire internet in Singapore to stop the rumors from spreading.", isCorrect: false, explanation: "This crippled the economy and caused even more panic as citizens couldn't contact their loved ones." },
                             { text: "Ignore the rumors. The truth will eventually come out on its own.", isCorrect: false, explanation: "In a vacuum of information, fear takes over. You failed to protect the psychological resilience of the nation." }
                         ]
                     },
-                    {
+                    {   // Step 4 (Mini-game)
                         desc: "CRISIS REVEALED: Intelligence reveals the mastermind is trying to flee the country. What is your border strategy?",
                         keyword: "ICA",
                         anagramHint: "A 3-letter acronym for the authority that manages immigration and checkpoints.",
@@ -285,9 +284,8 @@
                             { text: "Enhance Immigration & Checkpoints Authority (ICA) biometric screening and share the suspect's profile with Interpol.", isCorrect: true, explanation: "Strong Border Security combined with international cooperation ensured the mastermind was apprehended at the checkpoint." }
                         ]
                     },
-                    {
+                    {   // Step 5 (No Mini-game)
                         desc: "CRISIS REVEALED: The crisis is over. However, the terrorists belonged to a specific ethnic group, and racial tensions are rising in the community.",
-                        keyword: "IRCC", 
                         options: [
                             { text: "Segregate communities based on race to prevent them from fighting.", isCorrect: false, explanation: "This destroyed decades of racial harmony and created deeply divided, resentful communities." },
                             { text: "Mobilize grassroots leaders and Inter-Racial and Religious Confidence Circles (IRCCs) to facilitate community dialogues.", isCorrect: true, explanation: "Excellent Social Defence. By bringing people together to talk, you reinforced trust and unity, preventing the terrorists from dividing the nation." },
@@ -299,16 +297,15 @@
             {
                 title: "Room 2: The Invisible Infiltration (Cyber Espionage)",
                 steps: [
-                    {
+                    {   // Step 1
                         desc: "CRISIS REVEALED: A highly sophisticated foreign entity has breached a critical government database containing defense blueprints. The data extraction is ongoing.",
-                        keyword: "ISOLATE", 
                         options: [
                             { text: "Publicly accuse a specific superpower immediately, demanding they stop.", isCorrect: false, explanation: "Without undeniable proof, your reckless accusation sparked an international crisis." },
                             { text: "Isolate the compromised servers, deploy the Cyber Security Agency (CSA) to patch the vulnerability.", isCorrect: true, explanation: "Textbook Digital Defence. By isolating the threat, you protected the remaining data." },
                             { text: "Sever the undersea internet cables, disconnecting the entire country from the web.", isCorrect: false, explanation: "The cure was worse than the disease, completely collapsing our Economic Defence." }
                         ]
                     },
-                    {
+                    {   // Step 2 (Mini-game)
                         desc: "CRISIS REVEALED: The CSA discovers the malware is polymorphic (it changes its code constantly). Standard antiviruses are failing.",
                         keyword: "AI",
                         anagramHint: "A 2-letter acronym for Artificial Intelligence.",
@@ -319,16 +316,15 @@
                             { text: "Utilize AI-driven threat hunting tools to identify the malware's behavior patterns and block its Command & Control server.", isCorrect: true, explanation: "By adapting with advanced technology, you successfully neutralized the active threat." }
                         ]
                     },
-                    {
+                    {   // Step 3
                         desc: "CRISIS REVEALED: The attackers, frustrated, shift their target to Singapore's financial institutions to cause economic chaos.",
-                        keyword: "BACKUPS", 
                         options: [
                             { text: "Order all banks to freeze all accounts so no money can move.", isCorrect: false, explanation: "This caused immediate domestic panic and destroyed international confidence in Singapore's financial hub." },
                             { text: "Mandate elevated cybersecurity protocols via the Monetary Authority of Singapore (MAS) and activate offline data backups.", isCorrect: true, explanation: "Economic Defence maintained. The banks stayed operational while shielding their core ledgers from corruption." },
                             { text: "Tell the private banks it is their own problem to solve.", isCorrect: false, explanation: "National security requires public-private partnership. The banks were overwhelmed and the economy crashed." }
                         ]
                     },
-                    {
+                    {   // Step 4 (Mini-game)
                         desc: "CRISIS REVEALED: Digital forensics definitively trace the attack back to a specific state actor. They deny involvement.",
                         keyword: "DIPLOMACY",
                         anagramHint: "The skill of managing international relations, typically by a country's representatives abroad.",
@@ -339,9 +335,8 @@
                             { text: "Ignore it. They didn't get the most important files anyway.", isCorrect: false, explanation: "Appeasement invites further attacks. You signaled that Singapore is a soft target." }
                         ]
                     },
-                    {
+                    {   // Step 5
                         desc: "CRISIS REVEALED: The threat is repelled. How do you ensure this doesn't happen again?",
-                        keyword: "HYGIENE", 
                         options: [
                             { text: "Ban all foreign software and only use locally made computers.", isCorrect: false, explanation: "This isolated Singapore from global technological advancements, severely stunting our growth." },
                             { text: "Launch a nationwide cyber hygiene campaign for citizens and businesses to prevent phishing.", isCorrect: true, explanation: "Total Defence relies on everyone. Educating the public hardens the nation against future digital intrusions." },
@@ -353,16 +348,15 @@
             {
                 title: "Room 3: The Territorial Intimidation (Aggressive State Actor)",
                 steps: [
-                    {
+                    {   // Step 1
                         desc: "CRISIS REVEALED: Radar shows a larger neighboring state conducting aggressive, unannounced naval drills right on the edge of Singapore's territorial waters.",
-                        keyword: "NAVY", 
                         options: [
                             { text: "Ignore the drills and tell commercial ships to find alternative routes.", isCorrect: false, explanation: "Appeasement failed. Yielding sovereign rights invited further bullying." },
                             { text: "Deploy the Republic of Singapore Navy (RSN) to patrol borders without engaging, and open diplomatic channels.", isCorrect: true, explanation: "Perfect deterrence. The RSN showed readiness while diplomacy kept tensions from boiling over." },
                             { text: "Fire warning shots across the bows of the foreign vessels.", isCorrect: false, explanation: "Catastrophic escalation. Your warning shots started an unnecessary war." }
                         ]
                     },
-                    {
+                    {   // Step 2 (Mini-game)
                         desc: "CRISIS REVEALED: In retaliation for our patrols, the foreign state threatens to block vital food and sand exports to Singapore.",
                         keyword: "STOCKPILES",
                         anagramHint: "Large accumulated reserves of goods or materials kept for an emergency.",
@@ -373,16 +367,15 @@
                             { text: "Tap into national stockpiles immediately and activate diversified supply chains from other countries.", isCorrect: true, explanation: "Economic Defence saved the day. By showing we don't rely solely on them, their blackmail tactic became useless." }
                         ]
                     },
-                    {
+                    {   // Step 3
                         desc: "CRISIS REVEALED: The foreign state begins broadcasting propaganda into Singapore, claiming our land historically belongs to them.",
-                        keyword: "UNITY", 
                         options: [
                             { text: "Reinforce National Education messaging, reminding citizens of our sovereign history and the importance of unity.", isCorrect: true, explanation: "Strong Psychological Defence. An educated, united populace will not be swayed by foreign interference." },
                             { text: "Broadcast our own fake news into their country to confuse their citizens.", isCorrect: false, explanation: "Engaging in a disinformation war eroded our international standing and moral high ground." },
                             { text: "Arrest anyone caught listening to the broadcasts.", isCorrect: false, explanation: "Heavy-handed policing caused domestic resentment and played right into the enemy's narrative of a fractured society." }
                         ]
                     },
-                    {
+                    {   // Step 4 (Mini-game)
                         desc: "CRISIS REVEALED: Tensions escalate. The foreign state begins massing troops near the border.",
                         keyword: "ALLIANCES",
                         anagramHint: "Unions or associations formed for mutual benefit, especially between countries.",
@@ -393,9 +386,8 @@
                             { text: "Conduct planned, joint military exercises with friendly international nations to signal our robust defense ties.", isCorrect: true, explanation: "Deterrence through alliances. Showing strong partnerships makes the aggressor recalculate the cost of an invasion." }
                         ]
                     },
-                    {
+                    {   // Step 5
                         desc: "CRISIS REVEALED: The crisis peaks at an emergency ASEAN summit. Their leader aggressively demands concessions in front of the world.",
-                        keyword: "UNCLOS", 
                         options: [
                             { text: "Walk out of the summit in protest.", isCorrect: false, explanation: "You abandoned the diplomatic battlefield, allowing them to control the narrative." },
                             { text: "Stand firm, reiterate Singapore's commitment to international law (UNCLOS), and propose mutual economic cooperation instead.", isCorrect: true, explanation: "Masterful diplomacy. You held the line on sovereignty while offering a peaceful, prosperous off-ramp for both nations." },
