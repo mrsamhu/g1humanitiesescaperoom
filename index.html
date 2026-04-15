@@ -15,6 +15,7 @@
             --border-color: #334155;
             --terminal-bg: #000000;
             --terminal-text: #22c55e;
+            --hint-color: #eab308;
         }
 
         * { box-sizing: border-box; font-family: 'Courier New', Courier, monospace; }
@@ -104,6 +105,26 @@
 
         .error-msg { color: var(--accent-red); font-size: 14px; margin-top: 10px; display: none; }
         
+        /* New Anagram Hint Styles */
+        .anagram-hint-btn {
+            background: none;
+            border: 1px solid var(--hint-color);
+            color: var(--hint-color);
+            margin-top: 15px;
+            padding: 5px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .anagram-hint-btn:hover { background: rgba(234, 179, 8, 0.1); }
+        .anagram-hint-text {
+            color: var(--hint-color);
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+            font-style: italic;
+        }
+
         .intel-hint {
             display: none;
             background-color: rgba(34, 197, 94, 0.1);
@@ -172,10 +193,16 @@
             <div class="minigame-container" id="minigameArea">
                 <div>⚠️ ENCRYPTED INTEL INTERCEPTED ⚠️</div>
                 <div style="font-size: 14px; color: #aaa; margin-top: 5px;">Unscramble the keyword to unlock the command options and reveal a hint.</div>
+                
                 <div class="scrambled-word" id="scrambledWord">L O A D I N G</div>
+                
                 <input type="text" class="decrypt-input" id="decryptInput" placeholder="ENTER KEYWORD" autocomplete="off">
                 <button class="decrypt-btn" onclick="checkDecryption()">DECRYPT</button>
                 <div class="error-msg" id="decryptError">Access Denied. Incorrect Keyword.</div>
+
+                <br>
+                <button class="anagram-hint-btn" onclick="showAnagramHint()">Need a Hint?</button>
+                <div class="anagram-hint-text" id="anagramHintText">Hint goes here</div>
             </div>
 
             <div class="intel-hint" id="intelHintArea">
@@ -200,6 +227,7 @@
                     {
                         desc: "STEP 1: Intelligence suggests an extremist sleeper cell is planning a coordinated explosive attack on a major MRT interchange in exactly 2 hours. You must direct the immediate response to defuse the situation.",
                         keyword: "SGSECURE",
+                        anagramHint: "A national mobile app used by citizens to report emergencies quietly.",
                         hint: "Look for the option that uses the mobile app designed for citizens to report emergencies quietly.",
                         options: [
                             { text: "Evacuate the entire downtown core immediately using blaring sirens.", isCorrect: false, explanation: "Mass panic ensued. Realizing they were exposed, the terrorists detonated their devices early in the crowded bottlenecks." },
@@ -210,6 +238,7 @@
                     {
                         desc: "STEP 2: The suspects are detained, but one mentions a secondary device hidden in a nearby warehouse. How do you locate it quickly?",
                         keyword: "CBRE",
+                        anagramHint: "A 4-letter acronym for Chemical, Biological, Radiological, and Explosive.",
                         hint: "You need the SAF group specializing in Chemical, Biological, Radiological, and Explosive threats.",
                         options: [
                             { text: "Carpet bomb the industrial sector to ensure the device is destroyed.", isCorrect: false, explanation: "This caused massive civilian casualties and destroyed our own infrastructure. Military Defence must be precise." },
@@ -220,6 +249,7 @@
                     {
                         desc: "STEP 3: The physical threat is neutralized, but rumors are spreading online that a third attack is happening right now at a mall. Panic is rising.",
                         keyword: "FACTS",
+                        anagramHint: "The opposite of fake news or rumors.",
                         hint: "Counter fake news by providing these instead of shutting down communications.",
                         options: [
                             { text: "Issue an official statement via trusted government channels and media outlets debunking the fake news.", isCorrect: true, explanation: "Psychological Defence in action. Providing clear, factual information calms the public and prevents panic." },
@@ -230,6 +260,7 @@
                     {
                         desc: "STEP 4: Intelligence reveals the mastermind is trying to flee the country. What is your border strategy?",
                         keyword: "ICA",
+                        anagramHint: "A 3-letter acronym for the authority that manages immigration and checkpoints.",
                         hint: "Rely on the authority responsible for securing our borders and checkpoints.",
                         options: [
                             { text: "Close all borders permanently. No one enters or leaves Singapore ever again.", isCorrect: false, explanation: "An extreme overreaction that instantly collapsed our trade-dependent economy." },
@@ -240,6 +271,7 @@
                     {
                         desc: "STEP 5: The crisis is over. However, the terrorists belonged to a specific ethnic group, and racial tensions are rising in the community.",
                         keyword: "IRCC",
+                        anagramHint: "A 4-letter acronym for groups focused on Inter-Racial and Religious harmony.",
                         hint: "Empower the Inter-Racial and Religious Confidence Circles to restore harmony.",
                         options: [
                             { text: "Segregate communities based on race to prevent them from fighting.", isCorrect: false, explanation: "This destroyed decades of racial harmony and created deeply divided, resentful communities." },
@@ -255,6 +287,7 @@
                     {
                         desc: "STEP 1: A highly sophisticated foreign entity has breached a critical government database containing defense blueprints. The data extraction is ongoing.",
                         keyword: "ISOLATE",
+                        anagramHint: "To separate something (like a server) from everything else.",
                         hint: "You must cut off the infected servers from the rest of the network to stop the bleeding.",
                         options: [
                             { text: "Publicly accuse a specific superpower immediately, demanding they stop.", isCorrect: false, explanation: "Without undeniable proof, your reckless accusation sparked an international crisis." },
@@ -265,6 +298,7 @@
                     {
                         desc: "STEP 2: The CSA discovers the malware is polymorphic (it changes its code constantly). Standard antiviruses are failing.",
                         keyword: "AI",
+                        anagramHint: "A 2-letter acronym for Artificial Intelligence.",
                         hint: "Use advanced Artificial Intelligence tools to hunt down the adapting malware.",
                         options: [
                             { text: "Reboot all government computers. Maybe it will clear the memory.", isCorrect: false, explanation: "Rebooting did nothing to remove the deeply embedded malware, and you lost valuable diagnostic data." },
@@ -275,6 +309,7 @@
                     {
                         desc: "STEP 3: The attackers, frustrated, shift their target to Singapore's financial institutions to cause economic chaos.",
                         keyword: "BACKUPS",
+                        anagramHint: "Copies of data kept in a separate place in case the original is lost or corrupted.",
                         hint: "Financial institutions must rely on these offline data copies to restore operations.",
                         options: [
                             { text: "Order all banks to freeze all accounts so no money can move.", isCorrect: false, explanation: "This caused immediate domestic panic and destroyed international confidence in Singapore's financial hub." },
@@ -285,6 +320,7 @@
                     {
                         desc: "STEP 4: Digital forensics definitively trace the attack back to a specific state actor. They deny involvement.",
                         keyword: "DIPLOMACY",
+                        anagramHint: "The skill of managing international relations, typically by a country's representatives abroad.",
                         hint: "Use international relations, alliances, and joint statements, not kinetic missiles.",
                         options: [
                             { text: "Launch a destructive military missile strike on their cyber-command headquarters.", isCorrect: false, explanation: "You escalated a cyber incident into a kinetic war. Deterrence failed." },
@@ -295,6 +331,7 @@
                     {
                         desc: "STEP 5: The threat is repelled. How do you ensure this doesn't happen again?",
                         keyword: "HYGIENE",
+                        anagramHint: "Cyber _______ refers to practices for ensuring the safe handling of data (like washing your hands, but for tech!).",
                         hint: "Cyber ________ is the practice of training citizens and workers to avoid clicking bad links.",
                         options: [
                             { text: "Ban all foreign software and only use locally made computers.", isCorrect: false, explanation: "This isolated Singapore from global technological advancements, severely stunting our growth." },
@@ -310,6 +347,7 @@
                     {
                         desc: "STEP 1: Radar shows a larger neighboring state conducting aggressive, unannounced naval drills right on the edge of Singapore's territorial waters.",
                         keyword: "NAVY",
+                        anagramHint: "The branch of a nation's armed services that conducts operations at sea.",
                         hint: "The Republic of Singapore ____ patrols our waters to deter threats.",
                         options: [
                             { text: "Ignore the drills and tell commercial ships to find alternative routes.", isCorrect: false, explanation: "Appeasement failed. Yielding sovereign rights invited further bullying." },
@@ -320,6 +358,7 @@
                     {
                         desc: "STEP 2: In retaliation for our patrols, the foreign state threatens to block vital food and sand exports to Singapore.",
                         keyword: "STOCKPILES",
+                        anagramHint: "Large accumulated reserves of goods or materials kept for an emergency.",
                         hint: "Tap into our national reserves of essential goods kept for emergencies.",
                         options: [
                             { text: "Surrender to their demands to keep the food flowing.", isCorrect: false, explanation: "You compromised national sovereignty. They now know they can control Singapore through blackmail." },
@@ -330,6 +369,7 @@
                     {
                         desc: "STEP 3: The foreign state begins broadcasting propaganda into Singapore, claiming our land historically belongs to them.",
                         keyword: "UNITY",
+                        anagramHint: "The state of being joined as a whole; sticking together.",
                         hint: "A strong sense of national _____ is the best psychological defense against foreign lies.",
                         options: [
                             { text: "Reinforce National Education messaging, reminding citizens of our sovereign history and the importance of unity.", isCorrect: true, explanation: "Strong Psychological Defence. An educated, united populace will not be swayed by foreign interference." },
@@ -340,6 +380,7 @@
                     {
                         desc: "STEP 4: Tensions escalate. The foreign state begins massing troops near the border.",
                         keyword: "ALLIANCES",
+                        anagramHint: "Unions or associations formed for mutual benefit, especially between countries.",
                         hint: "Conducting joint exercises with friendly nations builds strong defense _________.",
                         options: [
                             { text: "Disband the SAF to prove we have no hostile intentions.", isCorrect: false, explanation: "You completely removed our Military Defence. They invaded the next day." },
@@ -350,6 +391,7 @@
                     {
                         desc: "STEP 5: The crisis peaks at an emergency ASEAN summit. Their leader aggressively demands concessions in front of the world.",
                         keyword: "UNCLOS",
+                        anagramHint: "A 6-letter acronym for the UN Convention on the Law of the Sea.",
                         hint: "Rely on the United Nations Convention on the Law of the Sea to defend our rights.",
                         options: [
                             { text: "Walk out of the summit in protest.", isCorrect: false, explanation: "You abandoned the diplomatic battlefield, allowing them to control the narrative." },
@@ -391,12 +433,16 @@
             document.getElementById('decryptError').style.display = "none";
             document.getElementById('minigameArea').style.display = "block";
             
-            // Hide Options and Hints initially
+            // Setup Anagram Hint
+            document.getElementById('anagramHintText').style.display = "none";
+            document.getElementById('anagramHintText').innerText = step.anagramHint;
+
+            // Hide Options and Post-Decryption Hints initially
             document.getElementById('intelHintArea').style.display = "none";
             document.getElementById('intelHintText').innerText = step.hint;
             
             const optionsContainer = document.getElementById('optionsContainer');
-            optionsContainer.style.display = "none"; // Hide until decrypted
+            optionsContainer.style.display = "none"; 
             optionsContainer.innerHTML = '';
 
             let shuffledOptions = [...step.options].sort(() => Math.random() - 0.5);
@@ -407,6 +453,10 @@
                 btn.onclick = () => selectOption(opt);
                 optionsContainer.appendChild(btn);
             });
+        }
+
+        function showAnagramHint() {
+            document.getElementById('anagramHintText').style.display = "block";
         }
 
         // Allow pressing Enter to submit
