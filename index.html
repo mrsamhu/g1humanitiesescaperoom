@@ -77,6 +77,7 @@
         }
         
         .scrambled-word { font-size: 28px; letter-spacing: 8px; margin: 20px 0; font-weight: bold; }
+        .trivia-question { font-size: 18px; line-height: 1.5; margin: 20px 0; font-weight: bold; color: #fff; }
         
         .decrypt-input {
             background: transparent;
@@ -87,7 +88,7 @@
             text-align: center;
             outline: none;
             text-transform: uppercase;
-            width: 250px;
+            width: 280px;
             font-family: 'Courier New', Courier, monospace;
             padding-bottom: 5px;
         }
@@ -125,16 +126,6 @@
             display: none;
             font-style: italic;
         }
-
-        .intel-hint {
-            display: none;
-            background-color: rgba(34, 197, 94, 0.1);
-            border-left: 4px solid var(--accent-green);
-            padding: 15px;
-            margin-bottom: 20px;
-            color: var(--text-main);
-        }
-        .intel-hint span { color: var(--accent-green); font-weight: bold; }
 
         .options-container { display: none; flex-direction: column; gap: 15px; }
 
@@ -210,25 +201,17 @@
             <h2 id="scenarioTitle" style="margin-top: 0;">Loading...</h2>
             
             <div class="minigame-container" id="minigameArea" style="display: none;">
-                <div style="font-size: 18px; margin-bottom: 5px;">⚠️ ENCRYPTED INTEL INTERCEPTED ⚠️</div>
-                <div style="font-size: 14px; color: #aaa;">Decrypt the keyword below to reveal the crisis scenario and command options.</div>
+                <div style="font-size: 18px; margin-bottom: 5px; color: var(--accent-blue);">SECURITY CLEARANCE REQUIRED</div>
+                <div style="font-size: 14px; color: #aaa;">Answer the security question to unlock the next crisis scenario.</div>
                 
-                <div class="scrambled-word" id="scrambledWord">L O A D I N G</div>
+                <div class="trivia-question" id="triviaQuestion">Question goes here?</div>
                 
-                <input type="text" class="decrypt-input" id="decryptInput" placeholder="ENTER KEYWORD" autocomplete="off">
-                <button class="decrypt-btn" onclick="checkDecryption()">DECRYPT</button>
-                <div class="error-msg" id="decryptError">Access Denied. Incorrect Keyword.</div>
-
-                <br>
-                <button class="anagram-hint-btn" onclick="showAnagramHint()">Need a Hint?</button>
-                <div class="anagram-hint-text" id="anagramHintText">Hint goes here</div>
+                <input type="text" class="decrypt-input" id="decryptInput" placeholder="ENTER ANSWER" autocomplete="off">
+                <button class="decrypt-btn" onclick="checkTrivia()">SUBMIT</button>
+                <div class="error-msg" id="decryptError">Incorrect Answer. Try again.</div>
             </div>
 
             <div class="scenario-box" id="scenarioDesc"></div>
-
-            <div class="intel-hint" id="intelHintArea">
-                <span>INTEL DECODED:</span> <span id="intelHintText" style="color: white; font-weight: normal;">Hint goes here</span>
-            </div>
 
             <div class="options-container" id="optionsContainer"></div>
         </div>
@@ -241,12 +224,11 @@
     </div>
 
     <script>
-        // Completely cleaned data structure. Only Steps 2 and 4 contain mini-game parameters.
         const rooms = [
             {
                 title: "Room 1: The Imminent Threat (Terrorism)",
                 steps: [
-                    {   // Step 1 (No Mini-game)
+                    {   // Step 1
                         desc: "CRISIS REVEALED: Intelligence suggests an extremist sleeper cell is planning a coordinated explosive attack on a major MRT interchange in exactly 2 hours. You must direct the immediate response to defuse the situation.",
                         options: [
                             { text: "Evacuate the entire downtown core immediately using blaring sirens.", isCorrect: false, explanation: "Mass panic ensued. Realizing they were exposed, the terrorists detonated their devices early in the crowded bottlenecks." },
@@ -254,18 +236,18 @@
                             { text: "Discreetly activate the Special Operations Command (SOC) while using SGSecure to issue calm vigilance alerts.", isCorrect: true, explanation: "A swift, targeted response. The SOC apprehended the suspects without triggering a mass panic." }
                         ]
                     },
-                    {   // Step 2 (Mini-game)
+                    {   // Step 2 (Trivia 1)
+                        type: "trivia",
+                        question: "How many fire extinguishers are there on the level 1 corridor from the Block H to the General Office?",
+                        answer: "6",
                         desc: "CRISIS REVEALED: The suspects are detained, but one mentions a secondary device hidden in a nearby warehouse. How do you locate it quickly?",
-                        keyword: "CBRE",
-                        anagramHint: "A 4-letter acronym for Chemical, Biological, Radiological, and Explosive.",
-                        hint: "You need the SAF group specializing in Chemical, Biological, Radiological, and Explosive threats.",
                         options: [
                             { text: "Carpet bomb the industrial sector to ensure the device is destroyed.", isCorrect: false, explanation: "This caused massive civilian casualties and destroyed our own infrastructure. Military Defence must be precise." },
                             { text: "Deploy the SAF Chemical, Biological, Radiological and Explosive (CBRE) Defence Group to sweep the identified warehouse.", isCorrect: true, explanation: "Correct. The CBRE experts safely located and neutralized the threat without collateral damage." },
                             { text: "Ask the public to go into the warehouses to look for suspicious items to save time.", isCorrect: false, explanation: "You put untrained civilians in direct, lethal danger. Civil Defence relies on trained professionals leading the response." }
                         ]
                     },
-                    {   // Step 3 (No Mini-game)
+                    {   // Step 3
                         desc: "CRISIS REVEALED: The physical threat is neutralized, but rumors are spreading online that a third attack is happening right now at a mall. Panic is rising.",
                         options: [
                             { text: "Issue an official statement via trusted government channels and media outlets debunking the fake news.", isCorrect: true, explanation: "Psychological Defence in action. Providing clear, factual information calms the public and prevents panic." },
@@ -273,18 +255,15 @@
                             { text: "Ignore the rumors. The truth will eventually come out on its own.", isCorrect: false, explanation: "In a vacuum of information, fear takes over. You failed to protect the psychological resilience of the nation." }
                         ]
                     },
-                    {   // Step 4 (Mini-game)
+                    {   // Step 4
                         desc: "CRISIS REVEALED: Intelligence reveals the mastermind is trying to flee the country. What is your border strategy?",
-                        keyword: "ICA",
-                        anagramHint: "A 3-letter acronym for the authority that manages immigration and checkpoints.",
-                        hint: "Rely on the authority responsible for securing our borders and checkpoints.",
                         options: [
                             { text: "Close all borders permanently. No one enters or leaves Singapore ever again.", isCorrect: false, explanation: "An extreme overreaction that instantly collapsed our trade-dependent economy." },
                             { text: "Let them leave. It's better they are out of our country.", isCorrect: false, explanation: "You allowed a terrorist to escape justice, leaving them free to plan another attack from abroad." },
                             { text: "Enhance Immigration & Checkpoints Authority (ICA) biometric screening and share the suspect's profile with Interpol.", isCorrect: true, explanation: "Strong Border Security combined with international cooperation ensured the mastermind was apprehended at the checkpoint." }
                         ]
                     },
-                    {   // Step 5 (No Mini-game)
+                    {   // Step 5
                         desc: "CRISIS REVEALED: The crisis is over. However, the terrorists belonged to a specific ethnic group, and racial tensions are rising in the community.",
                         options: [
                             { text: "Segregate communities based on race to prevent them from fighting.", isCorrect: false, explanation: "This destroyed decades of racial harmony and created deeply divided, resentful communities." },
@@ -305,11 +284,11 @@
                             { text: "Sever the undersea internet cables, disconnecting the entire country from the web.", isCorrect: false, explanation: "The cure was worse than the disease, completely collapsing our Economic Defence." }
                         ]
                     },
-                    {   // Step 2 (Mini-game)
+                    {   // Step 2 (Trivia 2)
+                        type: "trivia",
+                        question: "There is an AED at the Gym. How many AEDs are there around the school?",
+                        answer: "6",
                         desc: "CRISIS REVEALED: The CSA discovers the malware is polymorphic (it changes its code constantly). Standard antiviruses are failing.",
-                        keyword: "AI",
-                        anagramHint: "A 2-letter acronym for Artificial Intelligence.",
-                        hint: "Use advanced Artificial Intelligence tools to hunt down the adapting malware.",
                         options: [
                             { text: "Reboot all government computers. Maybe it will clear the memory.", isCorrect: false, explanation: "Rebooting did nothing to remove the deeply embedded malware, and you lost valuable diagnostic data." },
                             { text: "Pay a shady hacker group online to counter-hack the malware.", isCorrect: false, explanation: "You funded criminals and gave them access to national systems. The situation worsened." },
@@ -324,11 +303,8 @@
                             { text: "Tell the private banks it is their own problem to solve.", isCorrect: false, explanation: "National security requires public-private partnership. The banks were overwhelmed and the economy crashed." }
                         ]
                     },
-                    {   // Step 4 (Mini-game)
+                    {   // Step 4
                         desc: "CRISIS REVEALED: Digital forensics definitively trace the attack back to a specific state actor. They deny involvement.",
-                        keyword: "DIPLOMACY",
-                        anagramHint: "The skill of managing international relations, typically by a country's representatives abroad.",
-                        hint: "Use international relations, alliances, and joint statements, not kinetic missiles.",
                         options: [
                             { text: "Launch a destructive military missile strike on their cyber-command headquarters.", isCorrect: false, explanation: "You escalated a cyber incident into a kinetic war. Deterrence failed." },
                             { text: "Work with ASEAN and international allies to issue a joint diplomatic statement condemning the cyber-norm violation.", isCorrect: true, explanation: "Strategic diplomacy. By rallying the international community, you applied pressure without firing a single shot." },
@@ -356,11 +332,11 @@
                             { text: "Fire warning shots across the bows of the foreign vessels.", isCorrect: false, explanation: "Catastrophic escalation. Your warning shots started an unnecessary war." }
                         ]
                     },
-                    {   // Step 2 (Mini-game)
+                    {   // Step 2 (Trivia 3)
+                        type: "trivia",
+                        question: "The slogan for SG Secure is?",
+                        answer: "Run Hide Tell",
                         desc: "CRISIS REVEALED: In retaliation for our patrols, the foreign state threatens to block vital food and sand exports to Singapore.",
-                        keyword: "STOCKPILES",
-                        anagramHint: "Large accumulated reserves of goods or materials kept for an emergency.",
-                        hint: "Tap into our national reserves of essential goods kept for emergencies.",
                         options: [
                             { text: "Surrender to their demands to keep the food flowing.", isCorrect: false, explanation: "You compromised national sovereignty. They now know they can control Singapore through blackmail." },
                             { text: "Threaten to bomb their commercial ports if they stop the exports.", isCorrect: false, explanation: "Aggressive military threats isolated Singapore globally and validated the foreign state's aggression." },
@@ -375,11 +351,8 @@
                             { text: "Arrest anyone caught listening to the broadcasts.", isCorrect: false, explanation: "Heavy-handed policing caused domestic resentment and played right into the enemy's narrative of a fractured society." }
                         ]
                     },
-                    {   // Step 4 (Mini-game)
+                    {   // Step 4
                         desc: "CRISIS REVEALED: Tensions escalate. The foreign state begins massing troops near the border.",
-                        keyword: "ALLIANCES",
-                        anagramHint: "Unions or associations formed for mutual benefit, especially between countries.",
-                        hint: "Conducting joint exercises with friendly nations builds strong defense _________.",
                         options: [
                             { text: "Disband the SAF to prove we have no hostile intentions.", isCorrect: false, explanation: "You completely removed our Military Defence. They invaded the next day." },
                             { text: "Sign a unilateral defense treaty, becoming a puppet state to a rival superpower.", isCorrect: false, explanation: "You traded one threat for another, losing Singapore's independent foreign policy and sovereignty." },
@@ -401,9 +374,8 @@
         let currentRoomIndex = 0;
         let currentStepIndex = 0;
         let state = "PLAYING"; 
-        let currentKeyword = "";
 
-        // Scramble Function
+        // Scramble Function (Kept only for the master login screen)
         function scramble(word) {
             let a = word.split(""), n = a.length;
             for(let i = n - 1; i > 0; i--) {
@@ -428,7 +400,7 @@
             if (input === "DETERRENCE") {
                 document.getElementById('bootScreen').style.display = "none";
                 document.getElementById('mainGame').style.display = "block";
-                loadStep(); // Start the first room only after login
+                loadStep(); 
             } else {
                 document.getElementById('masterError').style.display = "block";
                 setTimeout(() => { document.getElementById('masterError').style.display = "none"; }, 2000);
@@ -456,51 +428,50 @@
                 optionsContainer.appendChild(btn);
             });
 
-            // LOGIC CHECK: Is this Step 2 (index 1) or Step 4 (index 3)?
-            if (currentStepIndex === 1 || currentStepIndex === 3) {
-                // MINIGAME STEP
+            // LOGIC CHECK: Is this a Trivia step?
+            if (step.type === "trivia") {
                 document.getElementById('scenarioDesc').style.display = "none";
                 optionsContainer.style.display = "none";
-                document.getElementById('intelHintArea').style.display = "none";
                 
-                currentKeyword = step.keyword;
-                document.getElementById('scrambledWord').innerText = scramble(currentKeyword);
+                document.getElementById('triviaQuestion').innerText = step.question;
                 document.getElementById('decryptInput').value = "";
                 document.getElementById('decryptError').style.display = "none";
-                document.getElementById('anagramHintText').style.display = "none";
-                document.getElementById('anagramHintText').innerText = step.anagramHint;
-                document.getElementById('intelHintText').innerText = step.hint;
                 
                 document.getElementById('minigameArea').style.display = "block";
             } else {
-                // REGULAR STORY STEP (No Minigame)
+                // REGULAR STORY STEP
                 document.getElementById('minigameArea').style.display = "none";
-                document.getElementById('intelHintArea').style.display = "none";
-                
                 document.getElementById('scenarioDesc').style.display = "block";
                 optionsContainer.style.display = "flex";
             }
         }
 
-        function showAnagramHint() {
-            document.getElementById('anagramHintText').style.display = "block";
-        }
-
-        // Allow pressing Enter to submit step decryption
+        // Allow pressing Enter to submit trivia answer
         document.getElementById("decryptInput").addEventListener("keypress", function(event) {
             if (event.key === "Enter") {
                 event.preventDefault();
-                checkDecryption();
+                checkTrivia();
             }
         });
 
-        function checkDecryption() {
-            const input = document.getElementById('decryptInput').value.toUpperCase().trim();
-            if (input === currentKeyword) {
-                // Success! Hide minigame, SHOW scenario, hint, and options
+        function checkTrivia() {
+            const step = rooms[currentRoomIndex].steps[currentStepIndex];
+            
+            // Clean up the input and the answer by removing spaces, punctuation, and converting to uppercase
+            // This ensures "Run, Hide, Tell" and "Run Hide Tell" both register as correct
+            let inputRaw = document.getElementById('decryptInput').value.toUpperCase();
+            let inputClean = inputRaw.replace(/[^A-Z0-9]/g, '');
+            let expectedClean = step.answer.toUpperCase().replace(/[^A-Z0-9]/g, '');
+            
+            // Accommodate spelling out the number 6
+            if (expectedClean === "6" && inputClean === "SIX") {
+                inputClean = "6";
+            }
+
+            if (inputClean === expectedClean) {
+                // Success! Hide minigame, SHOW scenario and options
                 document.getElementById('minigameArea').style.display = "none";
                 document.getElementById('scenarioDesc').style.display = "block";
-                document.getElementById('intelHintArea').style.display = "block";
                 document.getElementById('optionsContainer').style.display = "flex";
             } else {
                 document.getElementById('decryptError').style.display = "block";
